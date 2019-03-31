@@ -21,6 +21,7 @@ class Map extends Component {
                 accessToken="pk.eyJ1IjoiY2hyaXN0aWFuOTQiLCJhIjoiY2pyOGtwamlrMDdlcjQ1bDgyY2d2N3YxYyJ9.L88q8kDAaxr61oEG_HIssg"
                 coordinates={{ lng: 36.8219, lat: -1.2921 }}
                 withFullscreen = {true}
+                style = {'mapbox://styles/mapbox/dark-v10'}
               />
             </div>
             <div className = "alert alert-info b0 my-2 text-right">
