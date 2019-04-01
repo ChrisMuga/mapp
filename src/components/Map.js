@@ -3,11 +3,22 @@ import MapboxMap from 'react-mapbox-wrapper'
 import '../App.css'
 
 class Map extends Component {
-
-  componentDidMount(){
-
+  constructor (props){
+    super(props)
+    this.state = {
+      theme: true
+    }
   }
 
+  componentDidMount(){
+    console.log('map component: mounted')
+  }
+
+  // functions
+  altTheme = () => {this.setState({theme: false})}
+  defaultTheme = () => {this.setState({theme: true})}
+
+  // render function
   render() {
     return (
      <div className = "row my-1 justify-content-center">
@@ -16,16 +27,29 @@ class Map extends Component {
             <div className = "alert alert-primary b0">
               <h4>This is a map, look. It helps you move around and stuff.</h4>
             </div>
+            <div className = "row my-2 justify-content-center">
+              <div className = "col-md-8">
+                <div className = "row">
+                  <div className = "col-md-6 text-center">
+                    <button className = "btn btn-primary full-width b0" onClick = {this.defaultTheme}>Default Map</button>
+                  </div>
+                  <div className = "col-md-6 text-center">
+                    <button className = "btn btn-dark full-width b0" onClick = {this.altTheme}>Alt Map</button>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div className = "map">
               <MapboxMap
-                accessToken="pk.eyJ1IjoiY2hyaXN0aWFuOTQiLCJhIjoiY2pyOGtwamlrMDdlcjQ1bDgyY2d2N3YxYyJ9.L88q8kDAaxr61oEG_HIssg"
-                coordinates={{ lng: 36.8219, lat: -1.2921 }}
-                withFullscreen = {true}
-                style = {'mapbox://styles/mapbox/dark-v10'}
+                accessToken = "pk.eyJ1IjoiY2hyaXN0aWFuOTQiLCJhIjoiY2pyOGtwamlrMDdlcjQ1bDgyY2d2N3YxYyJ9.L88q8kDAaxr61oEG_HIssg"
+                coordinates = {{ lng: 36.8219, lat: -1.2921 }}
+                withFullscreen = {this.state.theme}
+                style = {this.state.theme ? 'mapbox://styles/mapbox/streets-v10' : 'mapbox://styles/mapbox/dark-v10'} 
               />
             </div>
             <div className = "alert alert-info b0 my-2 text-right">
               <p>This is a map, it helps you move around and stuff...</p>
+              <p>{this.state.theme}</p>
             </div>
         </div>
      </div>
