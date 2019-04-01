@@ -8,6 +8,8 @@ class Map extends Component {
     this.state = {
       theme: true
     }
+    this.altTheme = this.altTheme.bind(this)
+    this.defaultTheme = this.defaultTheme.bind(this)
   }
 
   componentDidMount(){
@@ -21,8 +23,8 @@ class Map extends Component {
   // render function
   render() {
     return (
-     <div className = "row my-1 justify-content-center">
-        <div className = "col-md-8">
+     <div className = "row my-1 justify-content-center" >
+        <div className = "col-md-12">
             <h1 className = "text-center">Map</h1>
             <div className = "alert alert-primary b0">
               <h4>This is a map, look. It helps you move around and stuff.</h4>
@@ -49,7 +51,7 @@ class Map extends Component {
             </div>
             <div className = "alert alert-info b0 my-2 text-right">
               <p>This is a map, it helps you move around and stuff...</p>
-              <p>{this.state.theme}</p>
+              <p>{this.state.theme ? 'yes': 'no'}</p>
             </div>
         </div>
      </div>
