@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Header from './Header'
 import Map from './Map'
-import Distance from './Distance'
+import Countries from './Countries'
 
 // css
 import '../App.css'
@@ -14,7 +14,7 @@ class Main extends Component {
         <Map/>
         <div className = "row my-2">
           <div className = "col-md-4">
-            <Distance/>
+            <Countries/>
           </div>
         </div>
      </div>
