@@ -49,7 +49,8 @@ class Map extends Component {
                 style = {this.state.theme ? 'mapbox://styles/mapbox/streets-v10' : 'mapbox://styles/mapbox/dark-v10'} 
               />
             </div>
-            <div className = "alert alert-info b0 my-2 text-right">
+            <br/>
+            <div className = {this.state.theme ? "p-2 alert-primary text-right" : "p-2 alert-dark text-right"}>
               <p>This is a map, it helps you move around and stuff...</p>
               <p>{this.state.theme ? 'yes': 'no'}</p>
             </div>
