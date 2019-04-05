@@ -3,6 +3,7 @@ import Header from './Header'
 import Map from './Map'
 import Countries from './Countries'
 import Driving from './Driving'
+import Navigation from './Navigation'
 
 // css
 import '../App.css'
@@ -11,6 +12,7 @@ class Main extends Component {
   render() {
     return (
      <div className = "my-2">
+        <Navigation/>
         <Header/>
         <div className = "row my-2">
           <div className = "col-md-3">
