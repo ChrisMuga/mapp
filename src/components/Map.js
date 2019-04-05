@@ -46,7 +46,7 @@ class Map extends Component {
                 accessToken = "pk.eyJ1IjoiY2hyaXN0aWFuOTQiLCJhIjoiY2pyOGtwamlrMDdlcjQ1bDgyY2d2N3YxYyJ9.L88q8kDAaxr61oEG_HIssg"
                 coordinates = {{ lng: 36.8219, lat: -1.2921 }}
                 withFullscreen = {this.state.theme}
-                style = {this.state.theme ? 'mapbox://styles/mapbox/streets-v10' : 'mapbox://styles/mapbox/dark-v10'} 
+                mapboxStyle = {this.state.theme ? 'mapbox://styles/mapbox/streets-v10' : 'mapbox://styles/mapbox/dark-v10'} 
               />
             </div>
             <br/>
