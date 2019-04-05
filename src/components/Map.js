@@ -24,7 +24,7 @@ class Map extends Component {
   render() {
     return (
      <div className = "row my-1 justify-content-center" >
-        <div className = "col-md-12">
+        <div className = "col-md-6">
             <h1 className = "text-center">Map</h1>
             <div className = "alert alert-primary b0">
               <h4>This is a map, look. It helps you move around and stuff.</h4>

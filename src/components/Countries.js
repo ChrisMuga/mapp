@@ -15,7 +15,11 @@ class Countries extends Component {
     }
 
     componentDidMount(){
+        console.log('countries-component: mounted')
         this.fetchCountriesData()
+    }
+    componentWillMount(){
+        console.log('waiting for component to mount')
     }
 
     // functions
@@ -33,8 +37,8 @@ class Countries extends Component {
     render() {
         const {countries} = this.state
         return (
-            <div>
-                <div className = "alert alert-light b0 scroll">
+            <div className = "row d-flex justify-content-center">
+                <div className = "col-md-3 alert alert-light b0 scroll">
                     <h1 className = "text-right">Countries [{countries.length}]</h1>
                     {
                        
@@ -47,22 +51,24 @@ class Countries extends Component {
                                 </div>
                                 <p><b>Capital: </b>{country.capital}</p>
                                 <br/>
-                                <button className="btn btn-danger btn-small b0 full-width" type="button" data-toggle="collapse" data-target={"#collapseExample"+i} aria-expanded="false" aria-controls="collapseExample">
-                                    Translations
-                                </button>
+                                <div className = "full-width text-center">
+                                    <button className="btn btn-danger btn-small b0" type="button" data-toggle="collapse" data-target={"#collapseExample"+i} aria-expanded="false" aria-controls="collapseExample">
+                                        Translations
+                                    </button>
+                                </div>
                                 <div className="collapse b0 my-2" id={"collapseExample"+i}>
                                     <div className="card card-body b0">
-                                        <ul class="list-group">
-                                            <li class="list-group-item"><b className = "text-success">DE</b> - {country.translations.de}</li>
-                                            <li class="list-group-item"><b className = "text-success">ES</b> - {country.translations.es}</li>
-                                            <li class="list-group-item"><b className = "text-success">FR</b> - {country.translations.fr}</li>
-                                            <li class="list-group-item"><b className = "text-success">JA</b> - {country.translations.ja}</li>
-                                            <li class="list-group-item"><b className = "text-success">IT</b> - {country.translations.it}</li>
-                                            <li class="list-group-item"><b className = "text-success">BR</b> - {country.translations.br}</li>
-                                            <li class="list-group-item"><b className = "text-success">PT</b> - {country.translations.pt}</li>
-                                            <li class="list-group-item"><b className = "text-success">NL</b> - {country.translations.nl}</li>
-                                            <li class="list-group-item"><b className = "text-success">HR</b> - {country.translations.hr}</li>
-                                            <li class="list-group-item"><b className = "text-success">FA</b> - {country.translations.fa}</li>
+                                        <ul className="list-group">
+                                            <li className="list-group-item"><b className = "text-success">DE</b> - {country.translations.de}</li>
+                                            <li className="list-group-item"><b className = "text-success">ES</b> - {country.translations.es}</li>
+                                            <li className="list-group-item"><b className = "text-success">FR</b> - {country.translations.fr}</li>
+                                            <li className="list-group-item"><b className = "text-success">JA</b> - {country.translations.ja}</li>
+                                            <li className="list-group-item"><b className = "text-success">IT</b> - {country.translations.it}</li>
+                                            <li className="list-group-item"><b className = "text-success">BR</b> - {country.translations.br}</li>
+                                            <li className="list-group-item"><b className = "text-success">PT</b> - {country.translations.pt}</li>
+                                            <li className="list-group-item"><b className = "text-success">NL</b> - {country.translations.nl}</li>
+                                            <li className="list-group-item"><b className = "text-success">HR</b> - {country.translations.hr}</li>
+                                            <li className="list-group-item"><b className = "text-success">FA</b> - {country.translations.fa}</li>
                                         </ul>
                                     </div>
                                 </div>
