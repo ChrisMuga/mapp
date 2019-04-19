@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import MapboxMap from 'react-mapbox-wrapper'
 import '../App.css'
+import Sample from './Sample'
 
 class Map extends Component {
   constructor (props){
@@ -28,6 +29,7 @@ class Map extends Component {
             <h1 className = "text-center">Map</h1>
             <div className = "alert alert-primary b0">
               <h4>This is a map, look. It helps you move around and stuff.</h4>
+              <Sample/>
             </div>
             <div className = "row my-2 justify-content-center">
               <div className = "col-md-8">

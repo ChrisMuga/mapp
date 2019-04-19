@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom"
 // components
 import Map from './Map'
 import Countries from './Countries'
+import Driving from './Driving';
+
 
 // css
 import '../App.css'
@@ -25,7 +27,10 @@ class Navigation extends Component {
                                 <Link className = "nav-link" to="/countries">Countries</Link>
                             </li>
                             <li className = "nav-item">
-                                <Link className = "nav-link" to="/map/">Map</Link>
+                                <Link className = "nav-link" to="/map">Map</Link>
+                            </li>
+                            <li className = "nav-item">
+                                <Link className = "nav-link" to="/driving">Driving</Link>
                             </li>
                         </ul>
                     </div>
@@ -34,6 +39,8 @@ class Navigation extends Component {
         
             <Route path="/map" exact component={Map} />
             <Route path="/countries/" component={Countries} />
+            <Route path="/driving" component={Driving} />
+
         </Router>
     )
   }

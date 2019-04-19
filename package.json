@@ -3,8 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@turf/circle": "^6.0.1",
-    "@turf/turf": "^5.1.6",
+    "mapbox": "^1.0.0-beta10",
     "mapbox-gl": "^0.53.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
