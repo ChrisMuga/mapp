@@ -28,7 +28,7 @@ class Map extends Component {
         <div className = "col-md-6">
             <h1 className = "text-center">Map</h1>
             <div className = "alert alert-primary b0">
-              <h4>This is a map, look. It helps you move around and stuff.</h4>
+              <h5>This is a map, look. It helps you move around and stuff.</h5>
               <Sample/>
             </div>
             <div className = "row my-2 justify-content-center">

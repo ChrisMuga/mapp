@@ -4,7 +4,7 @@ class Sample extends Component{
     render(){
         return (
             <div>
-                <span className = "badge b0 badge-primary">This is a sample description component using JSX</span>
+                <span className = "badge b0 badge-info">This is a sample description component using JSX</span>
             </div>
         )
     }
