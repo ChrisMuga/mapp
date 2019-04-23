@@ -6,7 +6,8 @@ class Countries extends Component {
         super(props)
         // states
         this.state = {
-            countries: []
+            countries: [],
+            loading: null,
         }
 
         // bind functions to this
@@ -17,6 +18,9 @@ class Countries extends Component {
     componentDidMount(){
         console.log('countries-component: mounted')
         this.fetchCountriesData()
+        this.setState({
+            loading: false
+        })
     }
     componentWillMount(){
         console.log('waiting for component to mount')
@@ -35,10 +39,16 @@ class Countries extends Component {
         })
     }
     render() {
-        const {countries} = this.state
+        const {countries, loading} = this.state
+        if(loading){
+            return(
+                <h1>LOADING</h1>
+            )
+        }else
+        {
         return (
             <div className = "row d-flex justify-content-center">
-                <div className = "col-md-3 alert alert-light b0 scroll">
+                <div className = "col-md-6 alert alert-light b0 scroll">
                     <h1 className = "text-right">Countries [{countries.length}]</h1>
                     {
                        
@@ -74,11 +84,15 @@ class Countries extends Component {
                                 </div>
                                 <hr/>                             
                             </div>
-                        ))
+                        )
+                        
+                    )
                     }
                 </div>
             </div>
+
         )
+                }
     }
 }
 

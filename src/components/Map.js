@@ -54,7 +54,7 @@ class Map extends Component {
             <br/>
             <div className = {this.state.theme ? "p-2 alert-primary text-right" : "p-2 alert-dark text-right"}>
               <p>This is a map, it helps you move around and stuff...</p>
-              <p>{this.state.theme ? 'yes': 'no'}</p>
+              <p>{this.state.theme ? 'Light Theme': 'Dark Theme'}</p>
             </div>
         </div>
      </div>
