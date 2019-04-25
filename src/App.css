@@ -9,3 +9,7 @@ body{font-family: 'Share Tech Mono', monospace;}
 }
 .flag{width: 32px; height: 20px;}
 .country-header{display: inline-block;}
+.map-container{
+    width   : 45vw;
+    height  : 80vh;
+}

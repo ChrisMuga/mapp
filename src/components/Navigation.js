@@ -4,8 +4,9 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom"
 // components
 import Map from './Map'
 import Countries from './Countries'
-import Driving from './Driving';
+import Driving from './Driving'
 import RequestRide from './RequestRide'
+import AutoSuggest from './AutoSuggest'
 
 // css
 import '../App.css'
@@ -35,6 +36,9 @@ class Navigation extends Component {
                             <li className = "nav-item">
                                 <Link className = "nav-link" to="/request-ride">Request Ride</Link>
                             </li>
+                            <li className = "nav-item">
+                                <Link className = "nav-link" to="/auto-suggest">Auto Suggest</Link>
+                            </li>
                         </ul>
                     </div>
                 </nav>
@@ -44,6 +48,7 @@ class Navigation extends Component {
             <Route path="/countries/" component={Countries} />
             <Route path="/driving" component={Driving} />
             <Route path="/request-ride" component={RequestRide} />
+            <Route path="/auto-suggest" component={AutoSuggest} />
 
         </Router>
     )
