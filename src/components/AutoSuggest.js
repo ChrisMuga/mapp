@@ -1,16 +1,8 @@
 import React, {Component} from 'react'
 import Autosuggest from 'react-autosuggest'
 import fetch from 'node-fetch'
+import theme from './Theme.css'
 
-// Teach Autosuggest how to calculate suggestions for any given input value.
-const getSuggestions = value => {
-  const inputValue = value.trim().toLowerCase()
-  const inputLength = inputValue.length
-
-  return inputLength === 0 ? [] : languages.filter(lang =>
-    lang.name.toLowerCase().slice(0, inputLength) === inputValue
-  )
-}
 
 // When suggestion is clicked, Autosuggest needs to populate the input
 // based on the clicked suggestion. Teach Autosuggest how to calculate the
@@ -19,7 +11,7 @@ const getSuggestionValue = suggestion => suggestion.display_name
 
 // Use your imagination to render suggestions.
 const renderSuggestion = suggestion => (
-  <div>
+  <div className = "suggestion">
     {suggestion.display_name}
   </div>
 )
@@ -86,7 +78,7 @@ class AutoSuggest extends Component {
         getSuggestionValue          = {getSuggestionValue}
         renderSuggestion            = {renderSuggestion}
         inputProps                  = {inputProps}
-        className                   = "form-control b0"
+        theme                       = {theme}
       />
     )
   }

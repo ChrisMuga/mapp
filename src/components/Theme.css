@@ -1,0 +1,10 @@
+input{
+    width: 100%;
+    border-radius: 0;
+    padding: 10px;
+    border: solid thin black;
+}
+
+.suggestion{
+    font-size: large;
+}
