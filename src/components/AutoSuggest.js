@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import Autosuggest from 'react-autosuggest'
 import fetch from 'node-fetch'
 import theme from './Theme.css'
+import '../App.css'
 
 
 // When suggestion is clicked, Autosuggest needs to populate the input
@@ -11,8 +12,8 @@ const getSuggestionValue = suggestion => suggestion.display_name
 
 // Use your imagination to render suggestions.
 const renderSuggestion = suggestion => (
-  <div className = "suggestion">
-    {suggestion.display_name}
+  <div className = "suggestion bg-light">
+    <button className = "btn btn-primary b0">{suggestion.display_name.toUpperCase()}</button>
   </div>
 )
 
@@ -49,6 +50,11 @@ class AutoSuggest extends Component {
             suggestions: (data)
           })
     })
+    .catch(()=>{
+        this.setState({
+            suggestions: 'No Results'
+        })
+    })
     
   }
 
@@ -59,12 +65,23 @@ class AutoSuggest extends Component {
     })
   }
 
+  onSuggestionSelected = (event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }) => {
+    console.log('selected')
+    console.log(suggestion)
+    console.log(suggestionValue)
+    this.setState(
+      {
+        center: [suggestion.lat, suggestion.lon]
+      }
+    )
+  }
+
   render() {
     const { value, suggestions } = this.state
 
     // Autosuggest will pass through all these props to the input.
     const inputProps = {
-      placeholder: 'Type a programming language',
+      placeholder: 'Search',
       value,
       onChange: this.onChange
     }
@@ -79,6 +96,7 @@ class AutoSuggest extends Component {
         renderSuggestion            = {renderSuggestion}
         inputProps                  = {inputProps}
         theme                       = {theme}
+        onSuggestionSelected        = {this.onSuggestionSelected}
       />
     )
   }

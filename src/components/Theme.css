@@ -1,10 +1,16 @@
+/* autosuggest stylings */
 input{
     width: 100%;
     border-radius: 0;
     padding: 10px;
     border: solid thin black;
+    margin-top: 15px;
 }
 
-.suggestion{
-    font-size: large;
+li{
+    list-style: none;
+}
+
+ul{
+    padding: 0px;
 }

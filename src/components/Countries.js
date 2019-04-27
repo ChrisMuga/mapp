@@ -39,10 +39,18 @@ class Countries extends Component {
         })
     }
     render() {
-        const {countries, loading} = this.state
-        if(loading){
+        const {countries} = this.state
+        if(countries.length === 0){
             return(
-                <h1>LOADING</h1>
+                <div className = "row d-flex justify-content-center">
+                    <div className = "col-md-4 text-center mid-level">
+                        <h1>LOADING</h1>
+                        <hr/>
+                        <h2>
+                            <i className="fas fa-spinner fa-spin"></i>
+                        </h2>      
+                    </div>  
+                </div>   
             )
         }else
         {
