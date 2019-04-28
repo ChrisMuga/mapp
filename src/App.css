@@ -27,3 +27,7 @@ body{font-family: 'Share Tech Mono', monospace;}
     width: 48vw;
     height: 80vh;
 }
+
+.suggestion:hover{
+    cursor: pointer;
+}

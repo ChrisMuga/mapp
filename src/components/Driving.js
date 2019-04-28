@@ -24,9 +24,9 @@ const getSuggestionValue = suggestion => suggestion.display_name
 
 // Use your imagination to render suggestions.
 const renderSuggestion = suggestion => (
-  <div className = "suggestion bg-light">
-    <button className = "btn btn-primary b0">{suggestion.display_name.toUpperCase()}</button>
-  </div>
+    <div className = "suggestion bg-light card card-body mb-2 p-2">
+      {suggestion.display_name.toUpperCase()}
+    </div>
 )
 
 
@@ -35,9 +35,11 @@ class Driving extends Component {
     super(props)
     this.state ={
       center: [36.81667,-1.28333] /*Nairobi */,
-      zoom:13,
+      zoom:11,
       value: '',
-      suggestions: []
+      suggestions: [],
+      to: null,
+      from: null,
     }
   }
 
@@ -79,12 +81,38 @@ class Driving extends Component {
     // console.log(suggestion)
     // console.log(suggestionValue)
     let coordinates = [ suggestion.lon,suggestion.lat]
-    console.log(coordinates)
+    alert(coordinates)
     this.setState(
       {
-        center: coordinates
-      }
+        from: coordinates
+      }      
     )
+    mapboxgl.accessToken = 'pk.eyJ1IjoiY2hyaXN0aWFuOTQiLCJhIjoiY2pyOGtwamlrMDdlcjQ1bDgyY2d2N3YxYyJ9.L88q8kDAaxr61oEG_HIssg';
+      //  create map
+       const map = new mapboxgl.Map({
+        container  : 'map',
+        style      : 'mapbox://styles/mapbox/streets-v9',
+        center     : this.state.center,
+        zoom       : this.state.zoom
+       });
+
+      //  directions
+      let directions = new Directions({
+          accessToken: mapboxgl.accessToken,
+          unit: 'metric',
+          profile: 'mapbox/driving-traffic',
+          controls:{
+              inputs: false,
+              instructions: false,
+          },
+      })
+      directions.setOrigin(coordinates);
+      directions.setDestination(this.state.center)
+      //- directions
+      map.addControl(directions, 'top-left');
+      // Add zoom and rotation controls to the map.
+      map.addControl(new mapboxgl.NavigationControl());
+      console.log(map)
   }
 
   componentDidMount()
@@ -101,13 +129,24 @@ class Driving extends Component {
 
       //  directions
       let directions = new Directions({
-          accessToken: mapboxgl.accessToken
+          accessToken: mapboxgl.accessToken,
+          unit: 'metric',
+          profile: 'mapbox/driving',
+          controls:{
+              // inputs: false,
+              // instructions: false,
+          },
       })
-      directions.setOrigin(this.state.center);
-      // directions.setDestination([p2a[1],p2a[0]])
-      //- directions
+    //   map.on('load', function() {
+    //     directions.setOrigin(this.state.from || this.state.center);
+    //     directions.setDestination(this.state.center)
+    // });
+      
+      // - directions
       map.addControl(directions, 'top-left');
-       console.log(map)
+      // Add zoom and rotation controls to the map.
+      map.addControl(new mapboxgl.NavigationControl());
+      console.log(map)
   }
   render() {
 
@@ -132,21 +171,26 @@ class Driving extends Component {
           </div>
           {/* input */}
           <div className = "col-md-6">
-            <input className = "form-control b0" placeholder = "SEARCH"/>
-            <Autosuggest
-              suggestions                 = {suggestions}
-              onSuggestionsFetchRequested = {this.onSuggestionsFetchRequested}
-              onSuggestionsClearRequested = {this.onSuggestionsClearRequested}
-              getSuggestionValue          = {getSuggestionValue}
-              renderSuggestion            = {renderSuggestion}
-              inputProps                  = {inputProps}
-              theme                       = {theme}
-              onSuggestionSelected        = {this.onSuggestionSelected}
-            />
-          </div>
-        </div>
+                <div className = "alert alert-primary b0"><h6>From</h6></div>
+                  <Autosuggest
+                    suggestions                 = {suggestions}
+                    onSuggestionsFetchRequested = {this.onSuggestionsFetchRequested}
+                    onSuggestionsClearRequested = {this.onSuggestionsClearRequested}
+                    getSuggestionValue          = {getSuggestionValue}
+                    renderSuggestion            = {renderSuggestion}
+                    inputProps                  = {inputProps}
+                    theme                       = {theme}
+                    onSuggestionSelected        = {this.onSuggestionSelected}
+                  />
+
+                  <hr/>
+
+                  
+                </div>
+              </div>
+            </div>
            
-     </div>
+     
     )
 
     
