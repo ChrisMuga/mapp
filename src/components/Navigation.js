@@ -11,6 +11,8 @@ import AutoSuggest from './AutoSuggest'
 // css
 import '../App.css'
 import map from './map.png'
+import Simulate from './Simulate';
+import SimpleSimulation from './SimpleSimulation';
 
 class Navigation extends Component {
   render() {
@@ -39,6 +41,12 @@ class Navigation extends Component {
                             <li className = "nav-item">
                                 <Link className = "nav-link" to="/auto-suggest">Auto Suggest</Link>
                             </li>
+                            <li className = "nav-item">
+                                <Link className = "nav-link" to="/simulate">Simulate</Link>
+                            </li>
+                            <li className = "nav-item">
+                                <Link className = "nav-link" to="/simple-simulation">Simple Simulation</Link>
+                            </li>
                         </ul>
                     </div>
                 </nav>
@@ -49,6 +57,8 @@ class Navigation extends Component {
             <Route path="/driving" component={Driving} />
             <Route path="/request-ride" component={RequestRide} />
             <Route path="/auto-suggest" component={AutoSuggest} />
+            <Route path="/simulate" component={Simulate} />
+            <Route path="/simple-simulation" component={SimpleSimulation} />
 
         </Router>
     )

@@ -29,6 +29,14 @@ const renderSuggestion = suggestion => (
     </div>
 )
 
+const getSuggestionValue_ = suggestion => suggestion.display_name
+
+// Use your imagination to render suggestions.
+const renderSuggestion_ = suggestion => (
+    <div className = "suggestion bg-light card card-body mb-2 p-2">
+      {suggestion.display_name.toUpperCase()}
+    </div>
+)
 
 class Driving extends Component {
   constructor(props){
@@ -37,7 +45,9 @@ class Driving extends Component {
       center: [36.81667,-1.28333] /*Nairobi */,
       zoom:11,
       value: '',
+      value_: '',
       suggestions: [],
+      suggestions_: [],
       to: null,
       from: null,
     }
@@ -47,6 +57,16 @@ class Driving extends Component {
     this.setState({
       value: newValue
     })
+
+
+  }
+
+  onChange_ = (event, { newValue }) => {
+    this.setState({
+      value: newValue
+    })
+
+
   }
 
   // Autosuggest will call this function every time you need to update suggestions.
@@ -73,6 +93,31 @@ class Driving extends Component {
   onSuggestionsClearRequested = () => {
     this.setState({
       suggestions: []
+    })
+  }
+
+  onSuggestionsFetchRequested_ = ({ value }) => {
+    let query = value
+    let url = `https://nominatim.openstreetmap.org/search?q=${query}&addressdetails=1&format=json&countrycodes=ke`
+    fetch(url)
+    .then(data => data.json())
+    .then(data => {
+        this.setState({
+            suggestions_: (data)
+          })
+    })
+    .catch(()=>{
+        this.setState({
+            suggestions_: 'No Results'
+        })
+    })
+    
+  }
+
+  // Autosuggest will call this function every time you need to clear suggestions.
+  onSuggestionsClearRequested_ = () => {
+    this.setState({
+      suggestions_: []
     })
   }
 
@@ -149,16 +194,17 @@ class Driving extends Component {
       console.log(map)
   }
   render() {
-
-    const { value, suggestions } = this.state
+    const { value, suggestions, suggestions_ } = this.state
 
     // Autosuggest will pass through all these props to the input.
     const inputProps = {
+      id: 'from',
       placeholder: 'Search',
       value,
       onChange: this.onChange
     }
-    
+
+
     return (
      <div>
         <div className = "alert alert-warning text-right b0 my-1">
@@ -172,18 +218,34 @@ class Driving extends Component {
           {/* input */}
           <div className = "col-md-6">
                 <div className = "alert alert-primary b0"><h6>From</h6></div>
-                  <Autosuggest
-                    suggestions                 = {suggestions}
-                    onSuggestionsFetchRequested = {this.onSuggestionsFetchRequested}
-                    onSuggestionsClearRequested = {this.onSuggestionsClearRequested}
-                    getSuggestionValue          = {getSuggestionValue}
-                    renderSuggestion            = {renderSuggestion}
-                    inputProps                  = {inputProps}
-                    theme                       = {theme}
-                    onSuggestionSelected        = {this.onSuggestionSelected}
-                  />
+                <Autosuggest
+                  id                          = "to"
+                  suggestions                 = {suggestions}
+                  onSuggestionsFetchRequested = {this.onSuggestionsFetchRequested}
+                  onSuggestionsClearRequested = {this.onSuggestionsClearRequested}
+                  getSuggestionValue          = {getSuggestionValue}
+                  renderSuggestion            = {renderSuggestion}
+                  inputProps                  = {inputProps}
+                  theme                       = {theme}
+                  onSuggestionSelected        = {this.onSuggestionSelected}
+                />
 
-                  <hr/>
+                <hr/>
+                <div className = "alert alert-primary b0"><h6>To</h6></div>
+                <Autosuggest
+                  id                          = "from"
+                  suggestions                 = {suggestions_}
+                  onSuggestionsFetchRequested = {this.onSuggestionsFetchRequested_}
+                  onSuggestionsClearRequested = {this.onSuggestionsClearRequested_}
+                  getSuggestionValue          = {getSuggestionValue_}
+                  renderSuggestion            = {renderSuggestion_}
+                  inputProps                  = {inputProps}
+                  theme                       = {theme}
+                  onSuggestionSelected        = {this.onSuggestionSelected}
+                />
+
+                <hr/>
+                
 
                   
                 </div>
