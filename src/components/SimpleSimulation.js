@@ -10,6 +10,8 @@ import 'mapbox-gl/dist/mapbox-gl.css' // Updating node module will keep css up t
 import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css' // Updating node module will keep css up to date.
 // mapbox stuff
 
+
+
 export default class SimpleSimulation extends Component{
     constructor(props){
         super(props)
@@ -69,7 +71,8 @@ export default class SimpleSimulation extends Component{
             suggestions_from: [],
             origin_name: name,
             origin: `${lat}, ${lon}`,
-            from:[lon,lat]
+            from:[lon,lat],
+            to:this.state.to
         })
         this.map()
     }
@@ -79,7 +82,8 @@ export default class SimpleSimulation extends Component{
             suggestions_to: [],
             destination_name: name,
             destination: `${lat}, ${lon}`,
-            to:[lon,lat]
+            to:[lon,lat],
+            from: this.state.from
         })
         this.map()
     }
@@ -124,17 +128,17 @@ export default class SimpleSimulation extends Component{
         center     : this.state.center,
         zoom       : this.state.zoom
        })
-
-      //  directions
-      let directions = new Directions({
-        accessToken: mapboxgl.accessToken,
-        unit: 'metric',
-        profile: 'mapbox/driving-traffic',
-        controls:{
-            inputs: true,
-            instructions: true,
-        },
-    })
+//  directions
+let directions = new Directions({
+    accessToken: mapboxgl.accessToken,
+    unit: 'metric',
+    profile: 'mapbox/driving-traffic',
+    controls:{
+        inputs: true,
+        instructions: true,
+    },
+})
+      
     if(this.state.from !== [])
     {
         directions.setOrigin(this.state.from)
@@ -143,6 +147,8 @@ export default class SimpleSimulation extends Component{
     {
         directions.setDestination(this.state.to)
     }
+
+    
 
     directions.on("route", e => {
         let routes = e.route
@@ -157,11 +163,17 @@ export default class SimpleSimulation extends Component{
             }
         )
     })
+
+    if(this.state.from.length>0 && this.state.to.length>0)
+    {
+        // - directions
+        map.addControl(directions, 'top-left')
+    }
     
-    // - directions
-    map.addControl(directions, 'top-left')
+    
     // Add zoom and rotation controls to the map.
     map.addControl(new mapboxgl.NavigationControl())
+    
     console.log(map)
     
     }
