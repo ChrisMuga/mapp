@@ -75,7 +75,7 @@ class GenericSimulation extends Component {
             
             map.on('load', function() {
                 if (map.getSource('route')) {
-                    map.getSource('route').setData(this.state.geojson);
+                    map.getSource('route').setData(geojson);
                   } else { // otherwise, make a new request
                     map.addLayer({
                       id: 'route',
@@ -87,7 +87,7 @@ class GenericSimulation extends Component {
                           properties: {},
                           geometry: {
                             type: 'LineString',
-                            coordinates: geojson
+                            coordinates: coordinates
                           }
                         }
                       },
