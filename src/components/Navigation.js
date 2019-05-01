@@ -13,6 +13,7 @@ import '../App.css'
 import map from './map.png'
 import Simulate from './Simulate';
 import SimpleSimulation from './SimpleSimulation';
+import GenericSimulation from './GenericSimulation';
 
 class Navigation extends Component {
   render() {
@@ -47,6 +48,9 @@ class Navigation extends Component {
                             <li className = "nav-item">
                                 <Link className = "nav-link" to="/simple-simulation">Simple Simulation</Link>
                             </li>
+                            <li className = "nav-item">
+                                <Link className = "nav-link" to="/generic-simulation">Generic Simulation</Link>
+                            </li>
                         </ul>
                     </div>
                 </nav>
@@ -59,6 +63,7 @@ class Navigation extends Component {
             <Route path="/auto-suggest" component={AutoSuggest} />
             <Route path="/simulate" component={Simulate} />
             <Route path="/simple-simulation" component={SimpleSimulation} />
+            <Route path="/generic-simulation" component={GenericSimulation} />
 
         </Router>
     )

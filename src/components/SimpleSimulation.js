@@ -61,7 +61,7 @@ export default class SimpleSimulation extends Component{
         })
         .catch(()=>{
             this.setState({
-                suggestions_from: 'No Results'
+                suggestions_from: []
             })
         })
     }
@@ -85,6 +85,7 @@ export default class SimpleSimulation extends Component{
             to:[lon,lat],
             from: this.state.from
         })
+        this.map()
         this.map()
     }
 
@@ -115,7 +116,7 @@ export default class SimpleSimulation extends Component{
         })
         .catch(()=>{
             this.setState({
-                suggestions_to: 'No Results'
+                suggestions_to: []
             })
         })
     }
@@ -128,16 +129,16 @@ export default class SimpleSimulation extends Component{
         center     : this.state.center,
         zoom       : this.state.zoom
        })
-//  directions
-let directions = new Directions({
-    accessToken: mapboxgl.accessToken,
-    unit: 'metric',
-    profile: 'mapbox/driving-traffic',
-    controls:{
-        inputs: true,
-        instructions: true,
-    },
-})
+    //  directions
+    let directions = new Directions({
+        accessToken: mapboxgl.accessToken,
+        unit: 'metric',
+        profile: 'mapbox/driving-traffic',
+        controls:{
+            inputs: true,
+            instructions: true,
+        },
+    })
       
     if(this.state.from !== [])
     {
@@ -173,9 +174,14 @@ let directions = new Directions({
     
     // Add zoom and rotation controls to the map.
     map.addControl(new mapboxgl.NavigationControl())
+   
     
-    console.log(map)
-    
+    }
+
+    enter(to,from){
+            console.log(to)
+            console.log(from)
+            this.map()
     }
     plot(from, to){
         if(from && to)
@@ -184,13 +190,29 @@ let directions = new Directions({
         fetch(url)
         .then(data => data.json())
         .then(data => {
-            console.log('start')
-            console.log(data)
-            console.log('end')
+
         })
         }
     }
+
+    componentWillMount(){
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(x => {
+                let latitude = x.coords.latitude
+                let longitude = x.coords.longitude
+                console.log('latitude: ',latitude)
+                console.log('longitude: ',longitude)
+                // this.setState({
+                //     to:[longitude, latitude],
+                //     from:[longitude, latitude]
+                // })
+            })
+          } else {
+            console.log('geolocation not supported')
+          }
+    }
     componentDidMount(){
+        
         this.map()
     }
     render(){
@@ -213,6 +235,7 @@ let directions = new Directions({
                             <div className = "card card-body suggestion mb-2 pr-2" key = {place.placeid} onClick = {()=>this.selectDestination(place.latitude, place.longitude, place.name)}>{place.name}</div>
                         ))}
                     </div>
+                    <button className = "btn btn-success b0 form-control my-2" onClick={() => {this.enter(this.state.to, this.state.from)}}>Enter</button>
                 </div>
                 {/* search */}
 
