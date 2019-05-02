@@ -245,6 +245,7 @@ export default class SimpleSimulation extends Component{
                     <div id = "map" className = "map"></div>  
                 </div>
                 {/* map */}
+                
             </div>
         )
     }

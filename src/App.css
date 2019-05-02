@@ -35,3 +35,10 @@ body{font-family: 'Share Tech Mono', monospace;}
 #suggestion:hover{
     cursor: pointer;
 }
+
+#instructions {
+    position: absolute;
+    overflow-y: scroll;
+    height: 60vh;
+    padding-right: 13px;
+  }
