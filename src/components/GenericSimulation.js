@@ -90,9 +90,9 @@ class GenericSimulation extends Component {
             let distance = data.routes[0].distance
             let duration = data.routes[0].duration
             
-            console.log(data)
-            console.log(steps)
-            console.log(coordinates)
+            // console.log(data)
+            // console.log(steps)
+            // console.log(coordinates)
             let geojson = {
                 type: 'Feature',
                 properties: {},
@@ -225,6 +225,14 @@ class GenericSimulation extends Component {
 
                   }
 
+                  // zoom to bounds
+                  var bounds = coordinates.reduce(function(bounds, coord) {
+                    return bounds.extend(coord);
+                    }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
+                     
+                    map.fitBounds(bounds, {
+                    padding: 20
+                    });
                 
               });
 
