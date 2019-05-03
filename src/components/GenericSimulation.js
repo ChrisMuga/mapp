@@ -7,6 +7,13 @@ import 'mapbox-gl/dist/mapbox-gl.css' // Updating node module will keep css up t
 import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css' // Updating node module will keep css up to date.
 // mapbox stuff
 
+// image - placeholders
+
+import p1 from './p-1.png'
+import p2 from './p-2.png'
+
+// image - placeholders
+
 
 
 class GenericSimulation extends Component {
@@ -58,18 +65,22 @@ class GenericSimulation extends Component {
     }
     map(from, to){
 
-        mapboxgl.accessToken = 'pk.eyJ1IjoiY2hyaXN0aWFuOTQiLCJhIjoiY2pyOGtwamlrMDdlcjQ1bDgyY2d2N3YxYyJ9.L88q8kDAaxr61oEG_HIssg'
+        mapboxgl.accessToken = 'pk.eyJ1Ijoic3ludGF4bHRkIiwiYSI6ImNqaDJxNnhzbDAwNnMyeHF3dGlqODZsYjcifQ.pcz6BWpzCHeZ6hQg4AH9ww'
         //  create map
         const map = new mapboxgl.Map({
         container  : 'map',
-        style      : 'mapbox://styles/mapbox/streets-v9',
+        style      : 'mapbox://styles/syntaxltd/cjtej8ywg042q1fo5en2014kv',
         center     : this.state.center,
         zoom       : this.state.zoom
         })
 
         // var canvas = map.getCanvasContainer()
-        
-        let url = `https://api.mapbox.com/directions/v5/mapbox/cycling/${from[0]},${from[1]};${to[0]},${to[1]}?steps=true&geometries=geojson&access_token=pk.eyJ1IjoiY2hyaXN0aWFuOTQiLCJhIjoiY2pyOGtwamlrMDdlcjQ1bDgyY2d2N3YxYyJ9.L88q8kDAaxr61oEG_HIssg`
+        let mode = {
+          traffic: 'driving-traffic',
+          driving: 'driving',
+          cycling: 'cycling'
+        }
+        let url = `https://api.mapbox.com/directions/v5/mapbox/${mode.driving}/${from[0]},${from[1]};${to[0]},${to[1]}?steps=true&geometries=geojson&access_token=pk.eyJ1IjoiY2hyaXN0aWFuOTQiLCJhIjoiY2pyOGtwamlrMDdlcjQ1bDgyY2d2N3YxYyJ9.L88q8kDAaxr61oEG_HIssg`
         fetch(url)
         .then(data => data.json())
         .then(data => {
@@ -132,29 +143,35 @@ class GenericSimulation extends Component {
                   }
                 // make an initial directions request that
                 // starts and ends at the same location
-                map.addLayer({
-                  id: 'point',
-                  type: 'circle',
-                  source: {
-                    type: 'geojson',
-                    data: {
-                      type: 'FeatureCollection',
-                      features: [{
-                        type: 'Feature',
-                        properties: {},
-                        geometry: {
-                          type: 'Point',
+                map.loadImage(p2, function(error, image) {
+                  if (error) throw error;
+                  map.addImage("custom-marker", image);
+                  /* Style layer: A style layer ties together the source and image and specifies how they are displayed on the map. */
+                  map.addLayer({
+                    id: "markers",
+                    type: "symbol",
+                    /* Source: A data source specifies the geographic coordinate where the image marker gets placed. */
+                    source: {
+                      type: "geojson",
+                      data: {
+                        type: 'FeatureCollection',
+                        features: [
+                          {
+                          type: 'Feature',
+                          properties: {},
+                          geometry: {
+                          type: "Point",
                           coordinates: from
+                          }
                         }
+                        ]
                       }
-                      ]
+                    },
+                    layout: {
+                    "icon-image": "custom-marker",
                     }
-                  },
-                  paint: {
-                    'circle-radius': 10,
-                    'circle-color': '#3887be'
-                  }
-                });
+                    });
+                  });
 
                 
                 // this is where the code from the next step will go
@@ -176,28 +193,35 @@ class GenericSimulation extends Component {
                   if (map.getLayer('end')) {
                     map.getSource('end').setData(end);
                   } else {
-                    map.addLayer({
-                      id: 'end',
-                      type: 'circle',
-                      source: {
-                        type: 'geojson',
-                        data: {
-                          type: 'FeatureCollection',
-                          features: [{
-                            type: 'Feature',
-                            properties: {},
-                            geometry: {
-                              type: 'Point',
+                    map.loadImage(p1, function(error, image) {
+                      if (error) throw error;
+                      map.addImage("custom-marker-1", image);
+                      /* Style layer: A style layer ties together the source and image and specifies how they are displayed on the map. */
+                      map.addLayer({
+                        id: "markers-1",
+                        type: "symbol",
+                        /* Source: A data source specifies the geographic coordinate where the image marker gets placed. */
+                        source: {
+                          type: "geojson",
+                          data: {
+                            type: 'FeatureCollection',
+                            features: [
+                              {
+                              type: 'Feature',
+                              properties: {},
+                              geometry: {
+                              type: "Point",
                               coordinates: to
+                              }
                             }
-                          }]
+                            ]
+                          }
+                        },
+                        layout: {
+                        "icon-image": "custom-marker-1",
                         }
-                      },
-                      paint: {
-                        'circle-radius': 10,
-                        'circle-color': '#f30'
-                      }
-                    });
+                        });
+                      });
 
                   }
 
@@ -278,76 +302,40 @@ class GenericSimulation extends Component {
           zoom       : this.state.zoom
           })
           map.on('load', function() {
-        map.addLayer({
-          id: 'point',
-          type: 'circle',
-          source: {
-            type: 'geojson',
-            data: {
-              type: 'FeatureCollection',
-              features: [{
-                type: 'Feature',
-                properties: {},
-                geometry: {
-                  type: 'Point',
-                  coordinates: from
+            map.loadImage(p2, function(error, image) {
+              if (error) throw error;
+              map.addImage("custom-marker", image);
+              /* Style layer: A style layer ties together the source and image and specifies how they are displayed on the map. */
+              map.addLayer({
+                id: "markers",
+                type: "symbol",
+                /* Source: A data source specifies the geographic coordinate where the image marker gets placed. */
+                source: {
+                  type: "geojson",
+                  data: {
+                    type: 'FeatureCollection',
+                    features: [
+                      {
+                      type: 'Feature',
+                      properties: {},
+                      geometry: {
+                      type: "Point",
+                      coordinates: from
+                      }
+                    }
+                    ]
+                  }
+                },
+                layout: {
+                "icon-image": "custom-marker",
                 }
-              }
-              ]
-            }
-          },
-          paint: {
-            'circle-radius': 10,
-            'circle-color': '#3887be'
-          }
-        });
+                });
+              });
       })
 
       
       }
 
-      mapB(to){
-        // Add starting point to the map
-
-
-          mapboxgl.accessToken = 'pk.eyJ1IjoiY2hyaXN0aWFuOTQiLCJhIjoiY2pyOGtwamlrMDdlcjQ1bDgyY2d2N3YxYyJ9.L88q8kDAaxr61oEG_HIssg'
-          //  create map
-          const map = new mapboxgl.Map({
-          container  : 'map',
-          style      : 'mapbox://styles/mapbox/streets-v9',
-          center     : this.state.center,
-          zoom       : this.state.zoom
-          })
-          map.on('load', function() {
-        map.addLayer({
-          id: 'point',
-          type: 'circle',
-          source: {
-            type: 'geojson',
-            data: {
-              type: 'FeatureCollection',
-              features: [{
-                type: 'Feature',
-                properties: {},
-                geometry: {
-                  type: 'Point',
-                  coordinates: to
-                }
-              }
-              ]
-            }
-          },
-          paint: {
-            'circle-radius': 10,
-            'circle-color': '#3887be'
-          }
-        });
-      })
-
-      
-      }
-  
-      
   
       fetchSuggetionsTo(e)
       {
@@ -405,10 +393,10 @@ class GenericSimulation extends Component {
                     {/* search */}
                     {/* instructions/details */}
                     <div className = "alert alert-info b0">Generic Simulation</div>
-                    <div className = "alert alert-dark b0">
-                        Distance: {distance} meters
+                    <div className = "alert alert-dark b0 details">
+                        Distance: {distance} meters / {distance/1000} kilometers
                         <hr/>
-                        Duration: {duration} seconds</div>
+                        Duration: {duration} seconds / {duration/60} minutes / {duration/3600} hrs</div>
                     <div id = "instructions">
                     <div className = "alert alert-primary b0 text-right">
                         <h4>Instructions</h4>
