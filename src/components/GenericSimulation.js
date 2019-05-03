@@ -383,10 +383,44 @@ class GenericSimulation extends Component {
       }
     render(){
         let {steps,distance, duration,suggestions_from, suggestions_to, origin_name, destination_name,destination, from, to, origin} = this.state
+        let instructions
+        if(steps.length > 0)
+        {
+          instructions = 
+            // instructions/details
+            <div>
+              <div className = "alert alert-dark b0 details">
+              Distance: {distance} meters / {distance/1000} kilometers
+              <hr/>
+              Duration: {duration} seconds / {duration/60} minutes / {duration/3600} hrs</div>
+              <div id = "instructions">
+              <div className = "alert alert-primary b0 text-right">
+                  <h4>Instructions</h4>
+                  <hr/>
+                  <small>Directions</small>
+              </div>
+                  {
+                      steps.map((step,key) => (
+                          <div className = "alert alert-warning b0" key = {key}><small>{key+1}. </small><small>{step.maneuver.instruction}</small></div>
+                      ))
+                  }
+              </div>
+            </div>
+        // instructions/details 
+        }
+        else
+        {
+          instructions = 
+
+          <div className = "alert alert-success b0">
+          Select Origin and Destination.
+          </div>
+        }
         return (
             <div className = "row my-1">
                 
-                <div className = "col-md-4">
+                <div className = "col-md-3">
+                  <div className = "alert alert-info b0">Generic Simulation</div>
                     {/* search */}
                     <div className = "alert alert-primary b0 my-1"><small>{origin_name}/{origin}</small></div>
                     <input className = "form-control b0" placeholder = "SEARCH ORIGIN" onChange = {this.fetchSuggetionsFrom}/>
@@ -404,31 +438,17 @@ class GenericSimulation extends Component {
                     </div>
                     <button className = "btn btn-success b0 form-control my-2" onClick={() =>{this.map(from, to)}}>Enter</button>
                     {/* search */}
-                    {/* instructions/details */}
-                    <div className = "alert alert-info b0">Generic Simulation</div>
-                    <div className = "alert alert-dark b0 details">
-                        Distance: {distance} meters / {distance/1000} kilometers
-                        <hr/>
-                        Duration: {duration} seconds / {duration/60} minutes / {duration/3600} hrs</div>
-                    <div id = "instructions">
-                    <div className = "alert alert-primary b0 text-right">
-                        <h4>Instructions</h4>
-                        <hr/>
-                        <small>Directions</small>
-                    </div>
-                        {
-                            steps.map((step,key) => (
-                                <div className = "alert alert-warning b0" key = {key}><small>{key+1}. </small><small>{step.maneuver.instruction}</small></div>
-                            ))
-                        }
-                    </div>
-                    {/* instructions/details */}
+                    
                 </div> 
                 {/* map */}
-                <div className = "col-md-8">
+                <div className = "col-md-6">
                     <div id ="map" className ="map"></div>
                 </div>
                 {/* map */}
+
+                <div className = "col-md-3">
+                    {instructions}
+                </div>
             </div>
         )
     }
