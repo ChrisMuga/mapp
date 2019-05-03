@@ -52,7 +52,8 @@ class GenericSimulation extends Component {
             console.log('longitude: ',longitude)
 
             this.setState({
-                from:[longitude, latitude]
+                from:[longitude, latitude],
+                center:[longitude, latitude]
             })
             this.mapA([longitude, latitude])
         })
@@ -306,7 +307,7 @@ class GenericSimulation extends Component {
           const map = new mapboxgl.Map({
           container  : 'map',
           style      : 'mapbox://styles/mapbox/streets-v9',
-          center     : this.state.center,
+          center     : this.state.from || this.state.center,
           zoom       : this.state.zoom
           })
           map.on('load', function() {
@@ -339,6 +340,10 @@ class GenericSimulation extends Component {
                 }
                 });
               });
+
+              map.flyTo({
+                center: from
+                });
       })
 
       
