@@ -8,11 +8,11 @@ import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css' // Updating 
 // mapbox stuff
 
 // image - placeholders
-
 import p1 from './p-1.png'
 import p2 from './p-2.png'
-
 // image - placeholders
+
+const   accessKey   = 'AIzaSyCOhkWgPANX5INiRCWbEaMdb_gDIA-K4E8'
 
 
 
@@ -34,7 +34,9 @@ class GenericSimulation extends Component {
             from:[],
             to:[],
             origin: '',
-            destination: ''
+            destination: '',
+            googleLatitude: '',
+            googleLongitude: ''
         }
         this.fetchSuggetionsFrom = this.fetchSuggetionsFrom.bind(this)
         this.fetchSuggetionsTo = this.fetchSuggetionsTo.bind(this)
@@ -42,14 +44,53 @@ class GenericSimulation extends Component {
         this.selectDestination = this.selectDestination.bind(this)
         this.map = this.map.bind(this)
         this.mapA = this.mapA.bind(this)
+        this.googleLatitude = this.googleLatitude.bind(this)
+        this.googleLongitude = this.googleLongitude.bind(this)
+
+
+    }
+     googleLatitude(place_id){
+      //  console.log(place_id)
+      let url = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?key=${accessKey}&place_id=${place_id}`
+      fetch(url)
+      .then(data => data.json())
+      .then(data => {
+        let lat = data.result.geometry.location.lat
+        this.setState({
+          googleLatitude: lat
+        })
+      })
+      // console.log(this.state.googleLatitude)
+      return this.state.googleLatitude
+      // return -1.28333
+    }
+
+    
+    
+     googleLongitude(place_id){
+      //  console.log(place_id)
+      let url = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?key=${accessKey}&place_id=${place_id}`
+      fetch(url)
+      .then(data => data.json())
+      .then(data => {
+        let long = data.result.geometry.location.lng
+        // console.log(long)
+        this.setState({
+          googleLongitude: long
+        })
+      })
+      // console.log(this.state.googleLongitude)
+      return this.state.googleLongitude
+      // return 36.81667 
     }
     componentWillMount(){
+      // console.log(this.googleLatitude("ChIJh6sPV8dotokRTZkjiVaydeE"))
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(x => {
             let latitude = x.coords.latitude
             let longitude = x.coords.longitude
-            console.log('latitude: ',latitude)
-            console.log('longitude: ',longitude)
+            // console.log('latitude: ',latitude)
+            // console.log('longitude: ',longitude)
 
             this.setState({
                 from:[longitude, latitude],
@@ -76,12 +117,12 @@ class GenericSimulation extends Component {
         })
 
         // var canvas = map.getCanvasContainer()
-        let mode = {
+        let profile = {
           traffic: 'driving-traffic',
           driving: 'driving',
           cycling: 'cycling'
         }
-        let url = `https://api.mapbox.com/directions/v5/mapbox/${mode.driving}/${from[0]},${from[1]};${to[0]},${to[1]}?steps=true&geometries=geojson&access_token=pk.eyJ1IjoiY2hyaXN0aWFuOTQiLCJhIjoiY2pyOGtwamlrMDdlcjQ1bDgyY2d2N3YxYyJ9.L88q8kDAaxr61oEG_HIssg`
+        let url = `https://api.mapbox.com/directions/v5/mapbox/${profile.traffic}/${from[0]},${from[1]};${to[0]},${to[1]}?steps=true&geometries=geojson&access_token=pk.eyJ1IjoiY2hyaXN0aWFuOTQiLCJhIjoiY2pyOGtwamlrMDdlcjQ1bDgyY2d2N3YxYyJ9.L88q8kDAaxr61oEG_HIssg`
         fetch(url)
         .then(data => data.json())
         .then(data => {
@@ -243,6 +284,7 @@ class GenericSimulation extends Component {
         })
 
       }
+      
       fetchSuggetionsFrom(e)
       {
           let query = (e.target.value)
@@ -250,12 +292,49 @@ class GenericSimulation extends Component {
           fetch(url)
           .then(data => data.json())
           .then(data => {
+            // console.log(data.length)
+            if(data.length === 0){
+
+              const   uuidv4      =  require('uuid/v4');
+              const   accessKey   = 'AIzaSyCOhkWgPANX5INiRCWbEaMdb_gDIA-K4E8'
+              let     sessionKey  =  uuidv4()
+              let     url         = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${query}&sessiontoken=${sessionKey}&key=${accessKey}&components=country:ke`
+
+              fetch(url,{
+                mode:'cors'
+              })
+              .then(data => data.json())
+              .then(data => {
+                  // console.log(data)
+                  let x = data.predictions.map(place => {
+                    let latitude = this.googleLatitude(place.place_id)
+                    let longitude = this.googleLongitude(place.place_id)
+                    // console.log(place.place_id)
+                    return {
+                            name      : place.description,
+                            latitude  : latitude,
+                            longitude : longitude,
+                            placeid   : place.place_id,
+                            tag       : 'google'
+                        }
+                })
+                  this.setState({
+                      suggestions_from: x
+                  })
+                  // console.log(this.state.suggestions_from)
+              })
+              .catch(err => {
+                console.log(err)
+              })
+            }
               let x = data.map(place => {
                   return {
-                          name: place.display_name,
-                          latitude: place.lat,
-                          longitude: place.lon,
-                          placeid:place.place_id
+                          name      : place.display_name,
+                          tag       : 'osm',
+                          latitude  : place.lat,
+                          longitude : place.lon,
+                          placeid   : place.place_id,
+                          
                       }
               })
               this.setState(
@@ -272,15 +351,33 @@ class GenericSimulation extends Component {
           })
       }
   
-      selectOrigin = (lat, lon, name) =>{
-          this.setState({
+      selectOrigin = (lat, lon, name, tag, place_id) =>{
+        console.log(place_id)
+        console.log(tag)
+         
+          if(tag === 'google'){
+            console.log('this is google.')
+            let lat = this.googleLatitude(place_id)
+            let lon = this.googleLongitude(place_id)
+            console.log(lat,lon)
+            this.setState({
               suggestions_from: [],
               origin_name: name,
               origin: `${lat}, ${lon}`,
               from:[lon,lat],
               to:this.state.to
           })
-          this.mapA([lon,lat])
+            this.mapA([lon,lat])
+          }else if(tag === 'osm'){
+            this.setState({
+              suggestions_from: [],
+              origin_name: name,
+              origin: `${lat}, ${lon}`,
+              from:[lon,lat],
+              to:this.state.to
+          })
+            this.mapA([lon,lat])
+          }
       }
 
       selectDestination = (lat, lon, name) =>{
@@ -357,14 +454,12 @@ class GenericSimulation extends Component {
           fetch(url)
           .then(data => data.json())
           .then(data => {
-              
-              
               let x = data.map(place => {
                   return {
-                          name: place.display_name,
-                          latitude: place.lat,
-                          longitude: place.lon,
-                          placeid: place.place_id
+                          name      : place.display_name,
+                          latitude  : place.lat,
+                          longitude : place.lon,
+                          placeid   : place.place_id,
                       }
               })
               // console.log(x)
@@ -390,9 +485,9 @@ class GenericSimulation extends Component {
             // instructions/details
             <div>
               <div className = "alert alert-dark b0 details">
-              Distance: {distance} meters / {distance/1000} kilometers
+              Distance: {distance} meters / {Math.round(distance/1000)} kilometers
               <hr/>
-              Duration: {duration} seconds / {duration/60} minutes / {duration/3600} hrs</div>
+              Duration: {duration} seconds / {Math.round(duration/60)} minutes / {Math.round(duration/3600)} hrs</div>
               <div id = "instructions">
               <div className = "alert alert-primary b0 text-right">
                   <h4>Instructions</h4>
@@ -426,14 +521,14 @@ class GenericSimulation extends Component {
                     <input className = "form-control b0" placeholder = "SEARCH ORIGIN" onChange = {this.fetchSuggetionsFrom}/>
                     <div className = "suggestions">
                         {suggestions_from.map(place => (
-                            <div className = "card card-body suggestion mb-2 pr-2" key = {place.placeid} onClick = {()=>this.selectOrigin(place.latitude, place.longitude, place.name)}>{place.name}</div>
+                            <div className = "card card-body suggestion mb-2 pr-2" key = {place.placeid} onClick = {()=>this.selectOrigin(place.latitude, place.longitude, place.name, place.tag, place.placeid)}>{place.name}</div>
                         ))}
                     </div>
                     <div className = "alert alert-primary b0 my-1"><small>{destination_name}/{destination}</small></div>
                     <input className = "form-control b0" placeholder = "SEARCH DESTINATION" onChange = {this.fetchSuggetionsTo}/>
                     <div className = "suggestions">
                         {suggestions_to.map(place => (
-                            <div className = "card card-body suggestion mb-2 pr-2" key = {place.placeid} onClick = {()=>this.selectDestination(place.latitude, place.longitude, place.name)}>{place.name}</div>
+                            <div className = "card card-body suggestion mb-2 pr-2" key = {place.placeid} onClick = {()=>this.selectDestination(place.latitude, place.longitude, place.name, place.tag)}>{place.name}</div>
                         ))}
                     </div>
                     <button className = "btn btn-success b0 form-control my-2" onClick={() =>{this.map(from, to)}}>Enter</button>
