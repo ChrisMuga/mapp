@@ -101,6 +101,7 @@ class GenericSimulation extends Component {
     }
     map(from, to){
 
+      console.log(from, to)
         mapboxgl.accessToken = 'pk.eyJ1Ijoic3ludGF4bHRkIiwiYSI6ImNqaDJxNnhzbDAwNnMyeHF3dGlqODZsYjcifQ.pcz6BWpzCHeZ6hQg4AH9ww'
         //  create map
         const map = new mapboxgl.Map({
@@ -371,19 +372,42 @@ class GenericSimulation extends Component {
           
       }
 
-      selectDestination = (lat, lon, name) =>{
-        this.setState({
+      selectDestination = (lat, lon, name, tag, place_id) =>{
+        if(tag === 'google'){
+          // use the place-id to get the latitude + longitude, will try to do this synchronously.
+
+            let url = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?key=${accessKey}&place_id=${place_id}`
+            fetch(url)
+            .then(data => data.json())
+            .then(data => {
+              // get lat/lng in promise
+              let lat = data.result.geometry.location.lat
+              let lng = data.result.geometry.location.lng
+              this.setState({
+                  suggestions_from: [],
+                  destination_name: name,
+                  destination: `${lat}, ${lng}`,
+                  to:[lng,lat],
+                  from:this.state.from
+              })
+            let to = [lng,lat]
+            let from   =  this.state.from
+            this.map(from,to)
+
+            })
+        }else if(tag === 'osm'){
+          this.setState({
             suggestions_to: [],
             destination_name: name,
             destination: `${lat}, ${lon}`,
             to:[lon,lat],
-            from: this.state.from
+            from:this.state.from
         })
-
+        let to = [lon,lat]
         let from = this.state.from
-        let to = [lon, lat]
-        // this.map()
-        this.map(from, to)
+          this.map(from,to)
+        }
+
     }
 
       mapA(from){
@@ -437,17 +461,74 @@ class GenericSimulation extends Component {
   
       fetchSuggetionsTo(e)
       {
+          // let query = (e.target.value)
+          // let url = `https://nominatim.openstreetmap.org/search?q=${query}&addressdetails=1&format=json&countrycodes=ke`
+          // fetch(url)
+          // .then(data => data.json())
+          // .then(data => {
+          //     let x = data.map(place => {
+          //         return {
+          //                 name      : place.display_name,
+          //                 latitude  : place.lat,
+          //                 longitude : place.lon,
+          //                 placeid   : place.place_id,
+          //             }
+          //     })
+          //     this.setState(
+          //         {
+          //             suggestions_to: x
+          //         }
+          //     )
+              
+          // })
+          // .catch(()=>{
+          //     this.setState({
+          //         suggestions_to: []
+          //     })
+          // })
+
           let query = (e.target.value)
           let url = `https://nominatim.openstreetmap.org/search?q=${query}&addressdetails=1&format=json&countrycodes=ke`
           fetch(url)
           .then(data => data.json())
-          .then(data => {
+          .then(data => { 
+            if(data.length === 0){
+
+              const   uuidv4      =  require('uuid/v4');
+              const   accessKey   = 'AIzaSyCOhkWgPANX5INiRCWbEaMdb_gDIA-K4E8'
+              let     sessionKey  =  uuidv4()
+              let     url         = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${query}&sessiontoken=${sessionKey}&key=${accessKey}&components=country:ke`
+
+              fetch(url,{
+                mode:'cors'
+              })
+              .then(data => data.json())
+              .then(data => {
+                  let x = data.predictions.map(place => {
+                    return {
+                            name      : place.description,
+                            latitude  : null,
+                            longitude : null,
+                            placeid   : place.place_id,
+                            tag       : 'google'
+                        }
+                })
+                  this.setState({
+                      suggestions_to: x
+                  })
+              })
+              .catch(err => {
+                
+              })
+            }
               let x = data.map(place => {
                   return {
                           name      : place.display_name,
+                          tag       : 'osm',
                           latitude  : place.lat,
                           longitude : place.lon,
                           placeid   : place.place_id,
+                          
                       }
               })
               this.setState(
@@ -463,6 +544,8 @@ class GenericSimulation extends Component {
               })
           })
       }
+
+
     render(){
         let {steps,distance, duration,suggestions_from, suggestions_to, origin_name, destination_name,destination, from, to, origin} = this.state
         let instructions
@@ -515,7 +598,7 @@ class GenericSimulation extends Component {
                       <input className = "form-control b0" placeholder = "SEARCH DESTINATION" onChange = {this.fetchSuggetionsTo}/>
                       <div className = "suggestions">
                           {suggestions_to.map(place => (
-                              <div className = "card card-body suggestion mb-2 pr-2" key = {place.placeid} onClick = {()=>this.selectDestination(place.latitude, place.longitude, place.name, place.tag)}>{place.name}</div>
+                              <div className = "card card-body suggestion mb-2 pr-2" key = {place.placeid} onClick = {()=>this.selectDestination(place.latitude, place.longitude, place.name, place.tag, place.placeid)}>{place.name}</div>
                           ))}
                       </div>
                       <button className = "btn btn-success b0 form-control my-2" onClick={() =>{this.map(from, to)}}>Enter</button>
