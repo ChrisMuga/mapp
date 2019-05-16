@@ -51,6 +51,7 @@ class Navigation extends Component {
                             <li className = "nav-item">
                                 <Link className = "nav-link" to="/generic-simulation">Generic Simulation</Link>
                             </li>
+
                         </ul>
                     </div>
                 </nav>

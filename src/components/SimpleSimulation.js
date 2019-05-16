@@ -174,7 +174,6 @@ export default class SimpleSimulation extends Component{
     
     // Add zoom and rotation controls to the map.
     map.addControl(new mapboxgl.NavigationControl())
-   
     
     }
 
@@ -202,10 +201,6 @@ export default class SimpleSimulation extends Component{
                 let longitude = x.coords.longitude
                 console.log('latitude: ',latitude)
                 console.log('longitude: ',longitude)
-                // this.setState({
-                //     to:[longitude, latitude],
-                //     from:[longitude, latitude]
-                // })
             })
           } else {
             console.log('geolocation not supported')
