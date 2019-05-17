@@ -14,8 +14,6 @@ import p2 from './p-2.png'
 
 const   accessKey   = 'AIzaSyCOhkWgPANX5INiRCWbEaMdb_gDIA-K4E8'
 
-
-
 class GenericSimulation extends Component {
     constructor(props){
         super(props)
@@ -121,11 +119,11 @@ class GenericSimulation extends Component {
         fetch(url)
         .then(data => data.json())
         .then(data => {
-            let routes = data.routes
+            let routes      = data.routes
             let coordinates = routes[0].geometry.coordinates
-            let steps = data.routes[0].legs[0].steps
-            let distance = data.routes[0].distance
-            let duration = data.routes[0].duration
+            let steps       = data.routes[0].legs[0].steps
+            let distance    = data.routes[0].distance
+            let duration    = data.routes[0].duration
             let geojson = {
                 type: 'Feature',
                 properties: {},
@@ -337,6 +335,8 @@ class GenericSimulation extends Component {
       }
   
       selectOrigin = (lat, lon, name, tag, place_id) =>{
+        document.getElementById('inputFrom').value = name
+        console.log('hello')
           if(tag === 'google'){
             // use the place-id to get the latitude + longitude, will try to do this synchronously.
 
@@ -373,6 +373,7 @@ class GenericSimulation extends Component {
       }
 
       selectDestination = (lat, lon, name, tag, place_id) =>{
+     
         if(tag === 'google'){
           // use the place-id to get the latitude + longitude, will try to do this synchronously.
 
@@ -384,7 +385,7 @@ class GenericSimulation extends Component {
               let lat = data.result.geometry.location.lat
               let lng = data.result.geometry.location.lng
               this.setState({
-                  suggestions_from: [],
+                  suggestions_to: [],
                   destination_name: name,
                   destination: `${lat}, ${lng}`,
                   to:[lng,lat],
@@ -392,6 +393,7 @@ class GenericSimulation extends Component {
               })
             let to = [lng,lat]
             let from   =  this.state.from
+            document.getElementById('inputTo').value = name
             this.map(from,to)
 
             })
@@ -405,7 +407,9 @@ class GenericSimulation extends Component {
         })
         let to = [lon,lat]
         let from = this.state.from
-          this.map(from,to)
+        document.getElementById('inputTo').value = name
+        this.map(from,to)
+          
         }
 
     }
@@ -461,31 +465,6 @@ class GenericSimulation extends Component {
   
       fetchSuggetionsTo(e)
       {
-          // let query = (e.target.value)
-          // let url = `https://nominatim.openstreetmap.org/search?q=${query}&addressdetails=1&format=json&countrycodes=ke`
-          // fetch(url)
-          // .then(data => data.json())
-          // .then(data => {
-          //     let x = data.map(place => {
-          //         return {
-          //                 name      : place.display_name,
-          //                 latitude  : place.lat,
-          //                 longitude : place.lon,
-          //                 placeid   : place.place_id,
-          //             }
-          //     })
-          //     this.setState(
-          //         {
-          //             suggestions_to: x
-          //         }
-          //     )
-              
-          // })
-          // .catch(()=>{
-          //     this.setState({
-          //         suggestions_to: []
-          //     })
-          // })
 
           let query = (e.target.value)
           let url = `https://nominatim.openstreetmap.org/search?q=${query}&addressdetails=1&format=json&countrycodes=ke`
@@ -547,7 +526,8 @@ class GenericSimulation extends Component {
 
 
     render(){
-        let {steps,distance, duration,suggestions_from, suggestions_to, origin_name, destination_name,destination, from, to, origin} = this.state
+        let {steps,distance, duration,suggestions_from, suggestions_to, from, to} = this.state
+        // let {steps,distance, duration,suggestions_from, suggestions_to, origin_name, destination_name,destination, from, to, origin} = this.state
         let instructions
         if(steps.length > 0)
         {
@@ -587,18 +567,28 @@ class GenericSimulation extends Component {
                 <div className = "col-md-3">
                   <div className = "alert alert-info b0">Generic Simulation</div>
                     {/* search */}
-                      <div className = "alert alert-primary b0 my-1"><small>{origin_name}/{origin}</small></div>
-                      <input className = "form-control b0" placeholder = "SEARCH ORIGIN" onChange = {this.fetchSuggetionsFrom}/>
+                      <input className = "form-control b0" placeholder = "SEARCH ORIGIN" onChange = {this.fetchSuggetionsFrom} id = "inputFrom"/>
                       <div className = "suggestions">
                           {suggestions_from.map(place => (
-                              <div className = "card card-body suggestion mb-2 pr-2" key = {place.placeid} onClick = {()=>this.selectOrigin(place.latitude, place.longitude, place.name, place.tag, place.placeid)}>{place.name}</div>
+                              <div 
+                                className = "card card-body suggestion mb-2 pr-2" 
+                                key       = {place.placeid} 
+                                onClick = {()=>this.selectOrigin(place.latitude, place.longitude, place.name, place.tag, place.placeid)}
+                              >
+                                {place.name}
+                              </div>
                           ))}
                       </div>
-                      <div className = "alert alert-primary b0 my-1"><small>{destination_name}/{destination}</small></div>
-                      <input className = "form-control b0" placeholder = "SEARCH DESTINATION" onChange = {this.fetchSuggetionsTo}/>
+                      <input className = "form-control b0" placeholder = "SEARCH DESTINATION" onChange = {this.fetchSuggetionsTo} id = "inputTo"/>
                       <div className = "suggestions">
                           {suggestions_to.map(place => (
-                              <div className = "card card-body suggestion mb-2 pr-2" key = {place.placeid} onClick = {()=>this.selectDestination(place.latitude, place.longitude, place.name, place.tag, place.placeid)}>{place.name}</div>
+                              <div 
+                                className = "card card-body suggestion mb-2 pr-2" 
+                                key       = {place.placeid} 
+                                onClick   = {()=>this.selectDestination(place.latitude, place.longitude, place.name, place.tag, place.placeid)}
+                              >
+                                {place.name}
+                              </div>
                           ))}
                       </div>
                       <button className = "btn btn-success b0 form-control my-2" onClick={() =>{this.map(from, to)}}>Enter</button>
