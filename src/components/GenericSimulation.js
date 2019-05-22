@@ -105,7 +105,7 @@ class GenericSimulation extends Component {
       document.getElementById('inputTo').value = ''
     }
     map(from, to){
-      if(from && to)
+      if(from.length !== 2 && to.length !== 2)
       {
         Swal.fire(
           'Incomplete Place Entries',
@@ -605,8 +605,8 @@ class GenericSimulation extends Component {
                               </div>
                           ))}
                       </div>
-                      <button className = "btn btn-success b0 form-control my-2" onClick={() =>{this.map(from, to)}}>Enter</button>
-                      <button className = "btn btn-secondary b0 form-control my-2" onclick={() => this.clearInputs}>Clear</button>
+                      <button className = "btn btn-success b0 form-control my-2" onClick={() => {this.map(from, to)}}>Enter</button>
+                      <button className = "btn btn-secondary b0 form-control my-2" onClick={() => {this.clearInputs()}}>Clear</button>
                     {/* search */}
                     
                 </div> 
