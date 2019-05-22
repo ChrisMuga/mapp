@@ -6,7 +6,9 @@ import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css' // Updating node module will keep css up to date.
 import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css' // Updating node module will keep css up to date.
 // mapbox stuff
-
+// sweet alert
+import Swal from 'sweetalert2'
+// sweet alert
 // image - placeholders
 import p1 from './p-1.png'
 import p2 from './p-2.png'
@@ -44,6 +46,7 @@ class GenericSimulation extends Component {
         this.mapA = this.mapA.bind(this)
         this.googleLatitude = this.googleLatitude.bind(this)
         this.googleLongitude = this.googleLongitude.bind(this)
+        this.clearInputs =  this.clearInputs.bind(this)
 
 
     }
@@ -97,8 +100,20 @@ class GenericSimulation extends Component {
     componentDidMount(){
       
     }
+    clearInputs(){
+      document.getElementById('inputFrom').value = ''
+      document.getElementById('inputTo').value = ''
+    }
     map(from, to){
-
+      if(from && to)
+      {
+        Swal.fire(
+          'Incomplete Place Entries',
+          'Please ensure both the Origin and Destination has been selected to simulate your trip',
+          'error'
+        )
+        return
+      }
       console.log(from, to)
         mapboxgl.accessToken = 'pk.eyJ1Ijoic3ludGF4bHRkIiwiYSI6ImNqaDJxNnhzbDAwNnMyeHF3dGlqODZsYjcifQ.pcz6BWpzCHeZ6hQg4AH9ww'
         //  create map
@@ -591,6 +606,7 @@ class GenericSimulation extends Component {
                           ))}
                       </div>
                       <button className = "btn btn-success b0 form-control my-2" onClick={() =>{this.map(from, to)}}>Enter</button>
+                      <button className = "btn btn-secondary b0 form-control my-2" onclick={() => this.clearInputs}>Clear</button>
                     {/* search */}
                     
                 </div> 
