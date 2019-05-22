@@ -563,7 +563,6 @@ class GenericSimulation extends Component {
         }
         return (
             <div className = "row my-1">
-                
                 <div className = "col-md-3">
                   <div className = "alert alert-info b0">Generic Simulation</div>
                     {/* search */}
